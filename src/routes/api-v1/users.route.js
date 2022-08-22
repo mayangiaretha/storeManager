@@ -13,15 +13,17 @@ router.post(
       password: Joi.string().min(6).max(20).required(),
     }),
   }),
-    UsersController.registerAUser
+  UsersController.registerAUser
 );
-router.post('/login',celebrate({
-        [Segments.BODY]: Joi.object().keys({
-            email: Joi.string().email().required(),
-            password: Joi.string().required(),
-        });
-    });
-UsersController.loginUser
-)
+router.post(
+  '/login',
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    }),
+  }),
+  UsersController.loginUser
+);
 
 export default router;

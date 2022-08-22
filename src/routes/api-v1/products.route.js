@@ -12,8 +12,8 @@ router.post(
   verifiedToken,
   celebrate({
     [Segments.BODY]: Joi.object().keys({
-      name: Joi.string().required().min(10).max(30),
-      aisle: Joi.string().required().min(10).max(30),
+      name: Joi.string().required().min(3).max(30),
+      aisle: Joi.string().required().min(3).max(30),
     }),
   }),
   ProductController.createAProduct
