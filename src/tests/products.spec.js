@@ -27,5 +27,4 @@ deescribe('Test the users feature', function () {
       });
   });
   productId = createdProduct.body.product.prouctId;
-
 });

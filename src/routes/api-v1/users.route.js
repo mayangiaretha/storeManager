@@ -5,7 +5,7 @@ import UsersController from '../../controllers/users';
 const router = Router();
 
 router.post(
-  '/register',
+  '/signup',
   celebrate({
     [Segments.BODY]: Joi.object().keys({
       username: Joi.string().min(2).max(15).required(),
