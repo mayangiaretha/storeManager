@@ -44,5 +44,39 @@ class ProductController {
       console.log(error.message);
     }
   }
+
+  static async updateAproduct(req, res) {
+    try {
+      const { id } = req.params;
+      const { name, aisle } = req.body;
+
+      await products.findOneandUpdate(
+        { productId: id },
+        { name, aisle, updatedAt: dayjs().format('YYYY-MM-DD h:mm:ss A') }
+      );
+      const updatedProduct = await products.findOne({ productId: id });
+      return res
+        .status(201)
+        .json({ updatedProduct, message: 'A product has been updated' });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  static async deleteAProduct(req, res) {
+    try {
+      const { id } = req.params;
+      const deletedProduct = await products.findOne({ productId: id });
+      if (!deletedProduct) {
+        return res.status(400).json({
+          message: 'This product doesnot exist',
+        });
+      }
+      await deletedProduct.deleteOne();
+      return res.status(204);
+    } catch (error) {
+      console.log(message.error);
+    }
+  }
 }
 export default ProductController;

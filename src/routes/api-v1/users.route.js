@@ -5,7 +5,7 @@ import UsersController from '../../controllers/users';
 const router = Router();
 
 router.post(
-  '/register',
+  '/signup',
   celebrate({
     [Segments.BODY]: Joi.object().keys({
       username: Joi.string().min(2).max(15).required(),
@@ -13,15 +13,17 @@ router.post(
       password: Joi.string().min(6).max(20).required(),
     }),
   }),
-    UsersController.registerAUser
+  UsersController.registerAUser
 );
-router.post('/login',celebrate({
-        [Segments.BODY]: Joi.object().keys({
-            email: Joi.string().email().required(),
-            password: Joi.string().required(),
-        });
-    });
-UsersController.loginUser
-)
+router.post(
+  '/login',
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    }),
+  }),
+  UsersController.loginUser
+);
 
 export default router;
