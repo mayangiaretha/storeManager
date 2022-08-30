@@ -50,7 +50,7 @@ class ProductController {
       const { id } = req.params;
       const { name, aisle } = req.body;
 
-      await products.findOneandUpdate(
+      await products.findOneAndUpdate(
         { productId: id },
         { name, aisle, updatedAt: dayjs().format('YYYY-MM-DD h:mm:ss A') }
       );
@@ -69,11 +69,11 @@ class ProductController {
       const deletedProduct = await products.findOne({ productId: id });
       if (!deletedProduct) {
         return res.status(400).json({
-          message: 'This product doesnot exist',
+          message: 'This product does not exist',
         });
       }
-      await deletedProduct.deleteOne();
-      return res.status(204);
+      await deletedProduct.remove();
+      return res.status(204).json({});
     } catch (error) {
       console.log(message.error);
     }

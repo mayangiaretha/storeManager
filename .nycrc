@@ -1,0 +1,19 @@
+{
+  "cache": false,
+  "check-coverage": false,
+  "extension": [".js"],
+  "include": ["**/*.js"],
+  "exclude": [
+    "coverage/**",
+    "node_modules/**",
+    "src/tests/**",
+    "src/interfaces",
+    "src/tests/",
+    "src/cluster.js",
+    "docs/**"
+  ],
+  "sourceMap": true,
+  "reporter": ["html", "text", "text-summary"],
+  "all": true,
+  "instrument": true
+}
