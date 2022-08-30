@@ -17,7 +17,7 @@ class SalesController {
       const { id } = req.params;
       const oneSale = await sales.findOne({ salesId: id });
       if (!oneSale) {
-        return res.status(400).json({ message: 'sales id doesnot exist' });
+        return res.status(400).json({ message: 'sales id does not exist' });
       }
       return res.json({ sale: oneSale });
     } catch (error) {
@@ -29,7 +29,7 @@ class SalesController {
     try {
       const { name } = req.body;
       const postedSale = {
-        salesId: uuidv4,
+        salesId: uuidv4(),
         name,
         createdAt: dayjs().format('DD-MM-YYYY h:mm:ss A'),
       };

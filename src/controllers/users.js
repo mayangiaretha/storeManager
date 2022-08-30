@@ -42,8 +42,11 @@ class UsersController {
       const checkPassword = await bcrypt.compare(password, loggedIn.password);
       if (!checkPassword)
         return res.status(400).json({ message: 'Invalid Password' });
-      const token = jwt.sign({ Id: uuidv4(), email }, process.env.TOKEN_KEY);
-      return res.header('access_token', token).json({ token });
+      const token = jwt.sign(
+        { Id: uuidv4(), email, role: 'superAdmin' },
+        process.env.TOKEN_KEY
+      );
+      return res.header('access-token', token).json({ token });
     } catch (error) {
       console.log(error.message);
     }
