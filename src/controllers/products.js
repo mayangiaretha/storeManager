@@ -1,11 +1,15 @@
 import products from '../models/products';
+import categories from '../models/category';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
 class ProductController {
   static async getAllProducts(req, res) {
     try {
-      const allProducts = await products.find();
+      const allProducts = await products.find().populate({
+        path: 'categoryId',
+        model: 'category',
+      });
       return res.status(200).json(allProducts);
     } catch (error) {
       console.log(error.message);
@@ -15,7 +19,10 @@ class ProductController {
   static async getAProduct(req, res) {
     try {
       const { id } = req.params;
-      const oneProduct = await products.findOne({ productId: id });
+      const oneProduct = await products.findOne({ productId: id }).populate({
+        path: 'categoryId',
+        model: 'category',
+      });
       if (!oneProduct) {
         return res
           .status(400)
@@ -28,13 +35,23 @@ class ProductController {
   }
   static async createAProduct(req, res) {
     try {
-      const { name, aisle } = req.body;
+      const { name, categoryId, amount, quantity } = req.body;
+      const foundCategory = await categories.findOne({ categoryId });
+      if (!foundCategory) {
+        return res.status(400).json({ error: 'category does not exist' });
+      }
+
+      const { _id } = foundCategory;
+
       const createdProduct = {
         productId: uuidv4(),
         name,
-        aisle,
+        amount,
+        quantity,
+        categoryId: _id,
         createdAt: dayjs().format('DD-MM-YYYY h:mm:ss A'),
       };
+
       await products.create(createdProduct);
       return res.status(201).json({
         product: createdProduct,
@@ -45,7 +62,7 @@ class ProductController {
     }
   }
 
-  static async updateAproduct(req, res) {
+  static async updateAProduct(req, res) {
     try {
       const { id } = req.params;
       const { name, aisle } = req.body;

@@ -3,6 +3,7 @@ const { expect } = chai;
 import { BaseTest } from './index.spec';
 import usersModel from '../models/users';
 import sales from '../models/sales';
+import { adminUser } from './fixtures/users';
 
 describe('Test the users feature', function () {
   let token;
@@ -10,11 +11,9 @@ describe('Test the users feature', function () {
   let salesId;
 
   beforeEach(async function () {
-    const res = await BaseTest.post('/auth/signup').send({
-      username: 'aretha40',
-      email: 'myaretha41@gmail.com',
-      password: 'password',
-    });
+    const newUser = usersModel(adminUser);
+    await usersModel.create(newUser);
+
     const response = await BaseTest.post('/auth/login').send({
       email: 'myaretha41@gmail.com',
       password: 'password',

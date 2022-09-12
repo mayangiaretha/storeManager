@@ -13,7 +13,9 @@ router.post(
   celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().required().min(3).max(30),
-      aisle: Joi.string().required().min(3).max(30),
+      categoryId: Joi.string().required(),
+      quantity: Joi.number().required(),
+      amount: Joi.number().required(),
     }),
   }),
   ProductController.createAProduct
@@ -27,10 +29,12 @@ router.put(
   celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().optional(),
-      aisle: Joi.string().optional(),
+      categoryId: Joi.string().optional(),
+      quantity: Joi.number().required(),
+      amount: Joi.number().required(),
     }),
   }),
-  ProductController.updateAproduct
+  ProductController.updateAProduct
 );
 
 export default router;
