@@ -8,9 +8,11 @@ import { ROLES, ADMIN } from '../constants/roles';
 class UsersController {
   static async registerAUser(req, res) {
     try {
-      const {roles} = req.user
-      if(roles !== ADMIN){
-        return res.status(400).json({ error: 'you are not authorised to register a user' });
+      const { roles } = req.user;
+      if (roles !== ADMIN) {
+        return res
+          .status(400)
+          .json({ error: 'you are not authorised to register a user' });
       }
       const { username, email, password, role } = req.body;
       const oldUser = await usersModel.findOne({ email });
@@ -49,7 +51,7 @@ class UsersController {
       const { password, email } = req.body;
       const loggedIn = await usersModel.findOne({ email });
       if (!loggedIn) return res.status(400).json({ message: 'Wrong Email' });
-      const {roles} = loggedIn
+      const { roles } = loggedIn;
       const checkPassword = await bcrypt.compare(password, loggedIn.password);
       if (!checkPassword)
         return res.status(400).json({ message: 'Invalid Password' });
