@@ -9,10 +9,11 @@ router.get('/', SalesController.getAllSales);
 
 router.post(
   '/',
-  verifiedToken,
+  // verifiedToken,
   celebrate({
     [Segments.BODY]: Joi.object().keys({
-      name: Joi.string().required().min(3).max(30),
+      productId: Joi.string().required(),
+      quantity: Joi.number().required(),
     }),
   }),
   SalesController.postASale

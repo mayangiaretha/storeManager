@@ -10,7 +10,10 @@ class ProductController {
         path: 'categoryId',
         model: 'category',
       });
-      return res.status(200).json(allProducts);
+      if (allProducts.length === 0) {
+        return res.status(200).json({ message: 'there are no products' });
+      }
+      res.json(allProducts);
     } catch (error) {
       console.log(error.message);
     }
