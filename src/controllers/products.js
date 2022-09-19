@@ -81,7 +81,6 @@ class ProductController {
       const { id } = req.params;
       const { name, aisle } = req.body;
 
-
       await products.findOneAndUpdate(
         { productId: id },
         { name, aisle, updatedAt: dayjs().format('YYYY-MM-DD h:mm:ss A') }

@@ -25,10 +25,17 @@ class CategoryController {
   static async addCategory(req, res) {
     try {
       const { categoryName } = req.body;
+
+      const foundCategory = await categories.findOne({ categoryName });
+      if (foundCategory) {
+        return res.status(400).json({ error: 'category already exists' });
+      }
+
       const newCategory = {
         categoryName,
         categoryId: uuidv4(),
       };
+
       await categories.create(newCategory);
       return res.status(201).json({
         newCategory,
