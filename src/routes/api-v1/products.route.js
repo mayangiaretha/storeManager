@@ -15,7 +15,7 @@ router.post(
       name: Joi.string().required().min(3).max(30),
       categoryId: Joi.string().required(),
       quantity: Joi.number().required(),
-      amount: Joi.number().required(),
+      amount: Joi.number().required()
     }),
   }),
   ProductController.createAProduct

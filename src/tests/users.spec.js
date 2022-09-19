@@ -45,4 +45,5 @@ describe('Test the users feature', function () {
     expect(response.status).to.equal(201);
     expect(response.body.username).to.equal('paul');
   });
+
 });

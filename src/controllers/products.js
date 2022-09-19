@@ -2,6 +2,7 @@ import products from '../models/products';
 import categories from '../models/category';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
+import { ADMIN, STORE_ATTENDANT } from '../constants/roles';
 
 class ProductController {
   static async getAllProducts(req, res) {
@@ -38,28 +39,38 @@ class ProductController {
   }
   static async createAProduct(req, res) {
     try {
-      const { name, categoryId, amount, quantity } = req.body;
-      const foundCategory = await categories.findOne({ categoryId });
-      if (!foundCategory) {
-        return res.status(400).json({ error: 'category does not exist' });
+      const { roles } = req.user;
+
+      if (roles === ADMIN || roles === STORE_ATTENDANT) {
+        const { name, categoryId, amount, quantity } = req.body;
+        const product = await products.findOne({ name });
+        if (product) {
+          return res.status(400).json({ message: 'product already exists' });
+        }
+        const foundCategory = await categories.findOne({ categoryId });
+        if (!foundCategory) {
+          return res.status(400).json({ error: 'category does not exist' });
+        }
+
+        const { _id } = foundCategory;
+        const createdProduct = {
+          productId: uuidv4(),
+          name,
+          amount,
+          quantity,
+          categoryId: _id,
+          createdAt: dayjs().format('DD-MM-YYYY h:mm:ss A'),
+        };
+        await products.create(createdProduct);
+        return res.status(201).json({
+          product: createdProduct,
+          message: 'product created',
+        });
+      } else {
+        return res
+          .status(400)
+          .json({ error: 'you are not authorised to create a product' });
       }
-
-      const { _id } = foundCategory;
-
-      const createdProduct = {
-        productId: uuidv4(),
-        name,
-        amount,
-        quantity,
-        categoryId: _id,
-        createdAt: dayjs().format('DD-MM-YYYY h:mm:ss A'),
-      };
-
-      await products.create(createdProduct);
-      return res.status(201).json({
-        product: createdProduct,
-        message: 'product created',
-      });
     } catch (error) {
       console.log(error.message);
     }
@@ -69,6 +80,7 @@ class ProductController {
     try {
       const { id } = req.params;
       const { name, aisle } = req.body;
+
 
       await products.findOneAndUpdate(
         { productId: id },

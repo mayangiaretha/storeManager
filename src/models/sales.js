@@ -11,7 +11,6 @@ const productSchema = new mongoose.Schema({
     ref: 'products',
     required: true,
   },
-
   quantity: {
     type: Number,
     required: true,

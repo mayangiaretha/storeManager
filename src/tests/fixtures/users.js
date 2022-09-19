@@ -10,3 +10,4 @@ export const adminUser = {
   roles: ADMIN,
   createdAt: dayjs().format('YYYY-MM-DD h:mm:ss A'),
 };
+
