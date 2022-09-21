@@ -11,7 +11,6 @@ describe('Test the products feature', function () {
   let newProduct;
   let productId;
   let categoryId;
-  // let newCategory;
 
   beforeEach(async function () {
     const newUser = usersModel(adminUser);
