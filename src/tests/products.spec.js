@@ -11,7 +11,7 @@ describe('Test the products feature', function () {
   let newProduct;
   let productId;
   let categoryId;
-  let newCategory;
+  // let newCategory;
 
   beforeEach(async function () {
     const newUser = usersModel(adminUser);
@@ -56,6 +56,7 @@ describe('Test the products feature', function () {
   });
   it('should get a product with an id', async () => {
     const response = await BaseTest.get(`products/${productId}`);
+    console.log(response.body, 'this is the response');
     expect(response.body.product.name).to.equal('coke');
     expect(response.body.product.productId).to.equal(productId);
   });

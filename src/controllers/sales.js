@@ -25,7 +25,7 @@ class SalesController {
       const { id } = req.params;
       const oneSale = await sales.findOne({ salesId: id }).populate({
         path: 'productId',
-        model: 'sale',
+        model: 'product',
       });
       if (!oneSale) {
         return res.status(400).json({ message: 'sales id does not exist' });

@@ -11,21 +11,18 @@ describe('Test the sales feature', function () {
   let token;
   let purchased;
   let salesId;
-  let newProduct;
   let productId;
   let categoryId;
 
   beforeEach(async function () {
-    const newUser = usersModel(adminUser);
-    await usersModel.create(newUser);
+    const AUser = usersModel(adminUser);
+    await usersModel.create(AUser);
 
     const response = await BaseTest.post('/auth/login').send({
       email: 'myaretha41@gmail.com',
       password: 'password',
     });
     token = response.body.token;
-
-    console.log(token, 'here====================>');
 
     const createACategory = await BaseTest.post('categories')
       .set('access-token', `${token}`)
@@ -51,7 +48,6 @@ describe('Test the sales feature', function () {
         quantity: 55,
       });
     purchased = postedSale.body;
-    console.log(purchased, 'hi======================>');
     salesId = postedSale.body.sale.salesId;
   });
 
@@ -67,21 +63,22 @@ describe('Test the sales feature', function () {
     expect(response.status).to.equal(200);
     expect(response.body).to.be.an('array');
   });
-  //   // it('should get a sale with an id', async () => {
-  //   //   const response = await BaseTest.get(`sales/${salesId}`);
-  //   //   expect(response.body.sale.name).to.equal('coke');
-  //   //   expect(response.body.sale.salesId).to.equal(salesId);
-  //   // });
-  //   //
-  //   // it('should create a sale', async () => {
-  //   //   const response = await BaseTest.post('sales')
-  //   //     .set('access-token', `${token}`)
-  //   //     .send({
-  //   //       name: 'coke',
-  //   //     });
-  //   //   expect(response.status).to.equal(201);
-  //   //   expect(response.body).to.include({
-  //   //     message: 'sold',
-  //   //   });
-  //   // });
+  it('should get a sale with an id', async () => {
+    const response = await BaseTest.get(`sales/${salesId}`);
+    expect(response.body.sale.productId.name).to.equal('coke');
+    expect(response.body.sale.salesId).to.equal(salesId);
+  });
+
+  it('should create a sale', async () => {
+    const response = await BaseTest.post('sales')
+      .set('access-token', `${token}`)
+      .send({
+        quantity: 15,
+        productId: productId,
+      });
+    expect(response.status).to.equal(201);
+    expect(response.body).to.include({
+      message: 'sold',
+    });
+  });
 });
