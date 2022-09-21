@@ -25,7 +25,7 @@ class SalesController {
       const { id } = req.params;
       const oneSale = await sales.findOne({ salesId: id }).populate({
         path: 'productId',
-        model: 'sale',
+        model: 'product',
       });
       if (!oneSale) {
         return res.status(400).json({ message: 'sales id does not exist' });
@@ -48,12 +48,10 @@ class SalesController {
       const { _id, amount, name } = productItem;
       const productQuantity = productItem.quantity;
 
-      if(productQuantity === 0){
-        return res
-            .status(400)
-            .json({
-              error: `${name} items currently out of stock`,
-            });
+      if (productQuantity === 0) {
+        return res.status(400).json({
+          error: `${name} items currently out of stock`,
+        });
       }
       const postedSale = {
         salesId: uuidv4(),
@@ -69,11 +67,9 @@ class SalesController {
       const unsoldProduct = productQuantity - quantitySold;
 
       if (unsoldProduct < 0) {
-        return res
-          .status(400)
-          .json({
-            error: `${productQuantity} items currently available, please adjust your request`,
-          });
+        return res.status(400).json({
+          error: `${productQuantity} items currently available, please adjust your request`,
+        });
       }
 
       await sales.create(postedSale);

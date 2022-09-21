@@ -4,11 +4,13 @@ import { BaseTest } from './index.spec';
 import usersModel from '../models/users';
 import products from '../models/products';
 import { adminUser } from './fixtures/users';
+import categories from '../models/category';
 
-describe('Test the users feature', function () {
+describe('Test the products feature', function () {
   let token;
   let newProduct;
   let productId;
+  let categoryId;
 
   beforeEach(async function () {
     const newUser = usersModel(adminUser);
@@ -18,20 +20,31 @@ describe('Test the users feature', function () {
       email: 'myaretha41@gmail.com',
       password: 'password',
     });
+
     token = response.body.token;
+    const createACategory = await BaseTest.post('categories')
+      .set('access-token', `${token}`)
+      .send({
+        categoryName: 'electronics',
+      });
+    categoryId = createACategory.body.newCategory.categoryId;
 
     const createdProduct = await BaseTest.post('products')
       .set('access-token', `${token}`)
       .send({
         name: 'coke',
-        aisle: 'drinks aisle',
+        amount: 400,
+        quantity: 2,
+        categoryId: categoryId,
       });
+
     newProduct = createdProduct.body;
     productId = createdProduct.body.product.productId;
   });
 
   afterEach(async function () {
     await usersModel.deleteMany({});
+    await categories.deleteMany({});
     await products.deleteMany({});
   });
 
@@ -42,6 +55,7 @@ describe('Test the users feature', function () {
   });
   it('should get a product with an id', async () => {
     const response = await BaseTest.get(`products/${productId}`);
+    console.log(response.body, 'this is the response');
     expect(response.body.product.name).to.equal('coke');
     expect(response.body.product.productId).to.equal(productId);
   });
@@ -50,20 +64,25 @@ describe('Test the users feature', function () {
     const response = await BaseTest.post('products')
       .set('access-token', `${token}`)
       .send({
-        name: 'coke',
-        aisle: 'drinks aisle',
+        name: 'sweets',
+        amount: 500,
+        quantity: 4,
+        categoryId: categoryId,
       });
     expect(response.status).to.equal(201);
     expect(response.body).to.include({
       message: 'product created',
     });
   });
+
   it('Should update a product', async () => {
     const response = await BaseTest.put(`products/${productId}`)
       .set('access-token', `${token}`)
       .send({
-        name: 'splash',
-        aisle: 'splash aisle',
+        name: 'coke',
+        amount: 400,
+        quantity: 2,
+        categoryId: categoryId,
       });
     expect(response.status).to.equal(201);
   });
